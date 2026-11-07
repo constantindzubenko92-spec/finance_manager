@@ -73,5 +73,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-# Тестова зміна для вправи git revert.
