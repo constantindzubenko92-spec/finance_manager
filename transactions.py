@@ -37,3 +37,31 @@ def add_transaction(
     }
     transactions.append(transaction)
     return transaction
+
+
+def show_transactions(transactions: list[dict]) -> None:
+    """Виводить транзакції з вирівняними колонками."""
+    if not transactions:
+        print("Транзакцій не знайдено.")
+        return
+
+    headings = ("ID", "TYPE", "AMOUNT", "CATEGORY", "DESCRIPTION")
+    rows = [
+        (
+            str(item["id"]),
+            item["type"],
+            str(item["amount"]),
+            item["category"],
+            item["description"],
+        )
+        for item in transactions
+    ]
+    widths = [
+        max(len(heading), max(len(row[index]) for row in rows))
+        for index, heading in enumerate(headings)
+    ]
+    header = " | ".join(text.ljust(width) for text, width in zip(headings, widths))
+    print(header)
+    print("-" * len(header))
+    for row in rows:
+        print(" | ".join(text.ljust(width) for text, width in zip(row, widths)).rstrip())
