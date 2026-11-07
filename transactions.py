@@ -2,6 +2,10 @@
 
 from decimal import Decimal, InvalidOperation
 
+MAX_AMOUNT = Decimal("999999999999.99")
+CENT = Decimal("0.01")
+_next_transaction_id = 1
+
 
 def add_transaction(
     transactions: list[dict],
@@ -11,6 +15,8 @@ def add_transaction(
     description: str,
 ) -> dict:
     """Перевіряє дані, додає транзакцію і повертає створений словник."""
+    global _next_transaction_id
+
     if transaction_type not in ("income", "expense"):
         raise ValueError("Тип транзакції має бути income або expense.")
 
@@ -21,13 +27,18 @@ def add_transaction(
 
     if not amount.is_finite() or amount <= 0:
         raise ValueError("Сума має бути додатним скінченним числом.")
+    if amount > MAX_AMOUNT:
+        raise ValueError(f"Максимальна сума транзакції: {MAX_AMOUNT}.")
+    if amount != amount.quantize(CENT):
+        raise ValueError("Сума має містити не більше двох знаків після коми.")
 
     category = category.strip()
     description = description.strip()
     if not category or not description:
         raise ValueError("Категорія та опис не можуть бути порожніми.")
 
-    transaction_id = max((item["id"] for item in transactions), default=0) + 1
+    largest_existing_id = max((item["id"] for item in transactions), default=0)
+    transaction_id = max(_next_transaction_id, largest_existing_id + 1)
     transaction = {
         "id": transaction_id,
         "type": transaction_type,
@@ -36,6 +47,7 @@ def add_transaction(
         "description": description,
     }
     transactions.append(transaction)
+    _next_transaction_id = transaction_id + 1
     return transaction
 
 
