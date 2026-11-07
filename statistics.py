@@ -19,3 +19,8 @@ def calculate_expenses(transactions: list[dict]) -> Decimal:
         if item["type"] == "expense":
             total += item["amount"]
     return total
+
+
+def calculate_balance(transactions: list[dict]) -> Decimal:
+    """Повертає різницю між доходами та витратами."""
+    return calculate_income(transactions) - calculate_expenses(transactions)
