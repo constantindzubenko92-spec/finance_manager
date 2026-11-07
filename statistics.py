@@ -24,3 +24,9 @@ def calculate_expenses(transactions: list[dict]) -> Decimal:
 def calculate_balance(transactions: list[dict]) -> Decimal:
     """Повертає різницю між доходами та витратами."""
     return calculate_income(transactions) - calculate_expenses(transactions)
+
+
+def filter_by_category(transactions: list[dict], category: str) -> list[dict]:
+    """Повертає транзакції вказаної категорії без урахування регістру."""
+    category = category.strip().casefold()
+    return [item for item in transactions if item["category"].casefold() == category]
