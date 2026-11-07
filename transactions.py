@@ -65,3 +65,12 @@ def show_transactions(transactions: list[dict]) -> None:
     print("-" * len(header))
     for row in rows:
         print(" | ".join(text.ljust(width) for text, width in zip(row, widths)).rstrip())
+
+
+def delete_transaction(transactions: list[dict], transaction_id: int) -> bool:
+    """Видаляє транзакцію за ID. Повертає False, якщо її немає."""
+    for index, item in enumerate(transactions):
+        if item["id"] == transaction_id:
+            del transactions[index]
+            return True
+    return False
